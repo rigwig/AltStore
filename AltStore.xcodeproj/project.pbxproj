@@ -501,6 +501,8 @@
 		D5FD4EC52A952EAD0097BEE8 /* AltWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FD4EC42A952EAD0097BEE8 /* AltWidgetBundle.swift */; };
 		D5FD4EC92A9530C00097BEE8 /* AppSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FD4EC82A9530C00097BEE8 /* AppSnapshot.swift */; };
 		D5FD4ECB2A9532960097BEE8 /* DatabaseManager+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FD4ECA2A9532960097BEE8 /* DatabaseManager+Async.swift */; };
+		27436B7210994A37BE9CA094 /* ALTTeam+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE80CB1BF6847AF945CEB9F /* ALTTeam+AltStore.swift */; };
+		EAB890F2D2B24385A79F62F1 /* ALTTeam+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE80CB1BF6847AF945CEB9F /* ALTTeam+AltStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1335,6 +1337,7 @@
 		D5FD4ECA2A9532960097BEE8 /* DatabaseManager+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DatabaseManager+Async.swift"; sourceTree = "<group>"; };
 		EA79A60285C6AF5848AA16E9 /* Pods-AltStore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AltStore.debug.xcconfig"; path = "Target Support Files/Pods-AltStore/Pods-AltStore.debug.xcconfig"; sourceTree = "<group>"; };
 		FC3822AB1C4CF1D4CDF7445D /* Pods_AltServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AltServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8FE80CB1BF6847AF945CEB9F /* ALTTeam+AltStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ALTTeam+AltStore.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2343,6 +2346,7 @@
 				BFF767CB2489AB5C0097E58C /* ALTServerError+Conveniences.swift */,
 				BF1FE357251A9FB000C3CE09 /* NSXPCConnection+MachServices.swift */,
 				BFF435D7255CBDAB00DD724F /* ALTApplication+AltStoreApp.swift */,
+				8FE80CB1BF6847AF945CEB9F /* ALTTeam+AltStore.swift */,
 				BF6C336124197D700034FD24 /* NSError+AltStore.swift */,
 				D5708416292448DA00D42D34 /* OperatingSystemVersion+Comparable.swift */,
 				D59A6B802AA92D1C00F61259 /* Process+Conveniences.swift */,
@@ -3414,6 +3418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27436B7210994A37BE9CA094 /* ALTTeam+AltStore.swift in Sources */,
 				BFF767C82489A74E0097E58C /* WirelessConnectionHandler.swift in Sources */,
 				BFF0394B25F0551600BE607D /* MenuController.swift in Sources */,
 				BFECAC8024FD950B0077C41F /* ConnectionManager.swift in Sources */,
@@ -3550,6 +3555,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAB890F2D2B24385A79F62F1 /* ALTTeam+AltStore.swift in Sources */,
 				D5FB28EE2ADDF89800A1C337 /* KnownSource.swift in Sources */,
 				BF66EED32501AECA007EE018 /* AltStore2ToAltStore3.xcmappingmodel in Sources */,
 				BF66EEA52501AEC5007EE018 /* Benefit.swift in Sources */,

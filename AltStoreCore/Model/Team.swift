@@ -11,20 +11,6 @@ import CoreData
 
 import AltSign
 
-public extension ALTTeamType
-{
-    var localizedDescription: String {
-        switch self
-        {
-        case .free: return NSLocalizedString("Free Developer Account", comment: "")
-        case .individual: return NSLocalizedString("Developer", comment: "")
-        case .organization: return NSLocalizedString("Organization", comment: "")
-        case .unknown: fallthrough
-        @unknown default: return NSLocalizedString("Unknown", comment: "")
-        }
-    }
-}
-
 public extension Team
 {
     static let maximumFreeAppIDs = 10

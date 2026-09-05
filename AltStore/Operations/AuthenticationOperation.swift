@@ -459,21 +459,54 @@ private extension AuthenticationOperation
     {
         func selectTeam(from teams: [ALTTeam])
         {
-            if let team = teams.first(where: { $0.type == .individual })
-            {
-                return completionHandler(.success(team))
+            guard let preferredTeam = teams.preferredTeam else { return completionHandler(.failure(AuthenticationError(.noTeam))) }
+            
+            // Only one team, so no need to ask which one to use.
+            guard teams.count > 1 else { return completionHandler(.success(preferredTeam)) }
+            
+            guard let presentingViewController = self.presentingViewController else {
+                // No view controller to present team picker, so fall back to preferred team.
+                return completionHandler(.success(preferredTeam))
             }
-            else if let team = teams.first(where: { $0.type == .free })
-            {
-                return completionHandler(.success(team))
-            }
-            else if let team = teams.first
-            {
-                return completionHandler(.success(team))
-            }
-            else
-            {
-                return completionHandler(.failure(AuthenticationError(.noTeam)))
+            
+            // Apple ID belongs to multiple teams (e.g. a free personal team and a paid Organization team),
+            // so let the user choose which one to use. The chosen team is saved as the active team.
+            DispatchQueue.main.async {
+                let alertController = UIAlertController(title: NSLocalizedString("Choose a Developer Team", comment: ""),
+                                                        message: NSLocalizedString("Your Apple ID belongs to multiple Apple Developer teams. Choose the team AltStore should use to sign and install apps.", comment: ""),
+                                                        preferredStyle: .alert)
+                
+                for team in teams
+                {
+                    var title = "\(team.name) (\(team.type.localizedDescription))"
+                    if team.identifier == preferredTeam.identifier
+                    {
+                        title += " " + NSLocalizedString("(Recommended)", comment: "")
+                    }
+                    
+                    let action = UIAlertAction(title: title, style: .default) { (action) in
+                        completionHandler(.success(team))
+                    }
+                    alertController.addAction(action)
+                    
+                    if team.identifier == preferredTeam.identifier
+                    {
+                        alertController.preferredAction = action
+                    }
+                }
+                
+                alertController.addAction(UIAlertAction(title: RSTSystemLocalizedString("Cancel"), style: .cancel) { (action) in
+                    completionHandler(.failure(OperationError.cancelled))
+                })
+                
+                if self.navigationController.presentingViewController != nil
+                {
+                    self.navigationController.present(alertController, animated: true, completion: nil)
+                }
+                else
+                {
+                    presentingViewController.present(alertController, animated: true, completion: nil)
+                }
             }
         }
 

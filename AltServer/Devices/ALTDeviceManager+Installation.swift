@@ -493,23 +493,49 @@ private extension ALTDeviceManager
             do
             {
                 let teams = try Result(teams, error).get()
+                guard let preferredTeam = teams.preferredTeam else { throw OperationError(.noTeam) }
                 
-                if let team = teams.first(where: { $0.type == .individual })
-                {
-                    return completionHandler(.success(team))
+                // Only one team, so no need to ask which one to use.
+                guard teams.count > 1 else { return completionHandler(.success(preferredTeam)) }
+                
+                // Apple ID belongs to multiple teams (e.g. a free personal team and a paid Organization team),
+                // so let the user choose which one to use, defaulting to the preferred (paid) team.
+                var selectedTeam: ALTTeam?
+                
+                DispatchQueue.main.sync {
+                    let alert = NSAlert()
+                    alert.messageText = NSLocalizedString("Choose a Developer Team", comment: "")
+                    alert.informativeText = NSLocalizedString("Your Apple ID belongs to multiple Apple Developer teams. Choose the team AltServer should use to sign and install apps.\n\nApps must be re-installed if you later switch teams.", comment: "")
+                    
+                    let popUpButton = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 300, height: 26), pullsDown: false)
+                    for team in teams
+                    {
+                        let title = "\(team.name) (\(team.type.localizedDescription))"
+                        popUpButton.addItem(withTitle: title)
+                        popUpButton.lastItem?.toolTip = team.identifier
+                    }
+                    
+                    if let index = teams.firstIndex(where: { $0.identifier == preferredTeam.identifier })
+                    {
+                        popUpButton.selectItem(at: index)
+                    }
+                    
+                    alert.accessoryView = popUpButton
+                    
+                    alert.addButton(withTitle: NSLocalizedString("Continue", comment: ""))
+                    alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
+                    
+                    NSRunningApplication.current.activate(options: .activateIgnoringOtherApps)
+                    
+                    let buttonIndex = alert.runModal()
+                    if buttonIndex == NSApplication.ModalResponse.alertFirstButtonReturn, teams.indices.contains(popUpButton.indexOfSelectedItem)
+                    {
+                        selectedTeam = teams[popUpButton.indexOfSelectedItem]
+                    }
                 }
-                else if let team = teams.first(where: { $0.type == .free })
-                {
-                    return completionHandler(.success(team))
-                }
-                else if let team = teams.first
-                {
-                    return completionHandler(.success(team))
-                }
-                else
-                {
-                    throw OperationError(.noTeam)
-                }
+                
+                guard let team = selectedTeam else { throw OperationError(.cancelled) }
+                completionHandler(.success(team))
             }
             catch
             {
