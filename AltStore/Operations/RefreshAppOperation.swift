@@ -49,8 +49,8 @@ class RefreshAppOperation: ResultOperation<InstalledApp>, @unchecked Sendable
         {
             do
             {
-                // Prefer minimuxer when a pairing file is available; fall back to AltServer otherwise.
-                if AppManager.shared.devicePairingFile != nil
+                // Use minimuxer when the on-device connection (pairing file + local VPN) is available; otherwise use AltServer.
+                if self.context.usesOnDeviceConnection == true
                 {
                     try self.refreshOnDevice(profiles: Set(profiles.values))
                 }

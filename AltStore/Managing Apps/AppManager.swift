@@ -127,6 +127,27 @@ extension AppManager
         }
     }
 
+    // Whether sideloading can happen on-device right now: requires a pairing file AND a live local
+    // VPN tunnel (100ms TCP probe). Without the tunnel, on-device operations can never succeed,
+    // so flows fall back to AltServer, which is the only route that works without a VPN app.
+    var prefersOnDeviceConnection: Bool {
+        guard self.devicePairingFile != nil else { return false }
+        return self.isReachableOnDevice()
+    }
+    
+    // Decides (once) whether the flow using `context` sideloads on-device or via AltServer.
+    func usesOnDeviceConnection(for context: OperationContext) -> Bool
+    {
+        if let usesOnDeviceConnection = context.usesOnDeviceConnection
+        {
+            return usesOnDeviceConnection
+        }
+        
+        let usesOnDeviceConnection = self.prefersOnDeviceConnection
+        context.usesOnDeviceConnection = usesOnDeviceConnection
+        return usesOnDeviceConnection
+    }
+    
     // Starts on-device connection via minimuxer (idempotent).
     func startOnDeviceConnection() throws
     {
@@ -156,7 +177,7 @@ extension AppManager
     {
         guard Minimuxer.testDeviceConnection(ifaddr: "10.7.0.1") else
         {
-            Logger.sideload.error("Device not reachable at 10.7.0.1 — VPN tunnel likely down.")
+            Logger.sideload.notice("Device not reachable at 10.7.0.1 (local VPN not connected).")
             return false
         }
         return true
@@ -278,20 +299,31 @@ extension AppManager
     }
     
     // Establishes how we'll reach the device for the current mode: starts the device session
-    // when a pairing file is configured (Remote AltServer), otherwise discovers an AltServer.
+    // when a pairing file is configured (Remote AltServer) and the local VPN is reachable,
+    // otherwise discovers an AltServer.
     @discardableResult
     func prepareServer(context: OperationContext = OperationContext()) -> Foundation.Operation
     {
-        guard AppManager.shared.devicePairingFile != nil else
+        guard self.usesOnDeviceConnection(for: context) else
         {
             return self.findServer(context: context) { _ in }
         }
 
         // Starts minimuxer on-device to enable sideloading via the pairing file.
         let startDeviceSessionOperation = RSTAsyncBlockOperation { (operation) in
-            do { try AppManager.shared.startOnDeviceConnection() }
-            catch { context.error = error }
-            operation.finish()
+            do
+            {
+                try AppManager.shared.startOnDeviceConnection()
+                operation.finish()
+            }
+            catch
+            {
+                // On-device connection failed after all, so fall back to AltServer for this flow.
+                Logger.sideload.notice("On-device connection unavailable, falling back to AltServer. \(error.localizedDescription, privacy: .public)")
+                
+                context.usesOnDeviceConnection = false
+                self.findServer(context: context) { _ in operation.finish() }
+            }
         }
         self.run([startDeviceSessionOperation], context: context)
 
@@ -1117,7 +1149,7 @@ extension AppManager
             }
         }
 
-        if AppManager.shared.devicePairingFile == nil
+        if !AppManager.shared.usesOnDeviceConnection(for: context.authenticatedContext)
         {
             /* Send */
             let sendAppOperation = SendAppOperation(context: context)
@@ -1659,7 +1691,7 @@ private extension AppManager
 
         var sendAppOperation: SendAppOperation?
 
-        if AppManager.shared.devicePairingFile == nil
+        if !AppManager.shared.usesOnDeviceConnection(for: context.authenticatedContext)
         {
             /* Send */
             let operation = SendAppOperation(context: context)

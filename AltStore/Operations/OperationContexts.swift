@@ -20,6 +20,10 @@ class OperationContext
     var server: Server?
     var error: Error?
     
+    // Whether this flow sideloads on-device (pairing file + local VPN) or via AltServer.
+    // Decided once per flow by AppManager so every operation in the flow agrees.
+    var usesOnDeviceConnection: Bool?
+    
     var presentingViewController: UIViewController? {
         get {
             var viewController: UIViewController?
@@ -63,6 +67,8 @@ class OperationContext
     convenience init(context: OperationContext)
     {
         self.init(server: context.server, error: context.error, operations: context.operations.allObjects)
+        
+        self.usesOnDeviceConnection = context.usesOnDeviceConnection
     }
 }
 
@@ -79,6 +85,7 @@ class AuthenticatedOperationContext: OperationContext
     {
         self.init(server: context.server, error: context.error, operations: context.operations.allObjects)
         
+        self.usesOnDeviceConnection = context.usesOnDeviceConnection
         self.session = context.session
         self.team = context.team
         self.certificate = context.certificate
