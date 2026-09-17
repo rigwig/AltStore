@@ -14,6 +14,8 @@
 		823661F92FA917BB0063A710 /* Minimuxer in Frameworks */ = {isa = PBXBuildFile; productRef = 823661F82FA917BB0063A710 /* Minimuxer */; };
 		CA1DE71000000000000005A2 /* IDevice in Frameworks */ = {isa = PBXBuildFile; productRef = CA1DE71000000000000005A1 /* IDevice */; };
 		82AB00042FC0345000567241 /* ChooseAnisetteServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82AB00032FC0345000567241 /* ChooseAnisetteServerView.swift */; };
+		823E33CB3059B78900EBB2DE /* AnisetteKit in Frameworks */ = {isa = PBXBuildFile; productRef = 823E33CA3059B78900EBB2DE /* AnisetteKit */; };
+		823E345E305A00E900EBB2DE /* LocalAnisetteDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823E345D305A00E900EBB2DE /* LocalAnisetteDataManager.swift */; };
 		A8BCEBEAC0620CF80A2FD26D /* Pods_AltServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC3822AB1C4CF1D4CDF7445D /* Pods_AltServer.framework */; };
 		BF02419622F2199300129732 /* RefreshAttemptsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF02419522F2199300129732 /* RefreshAttemptsViewController.swift */; };
 		BF0241AA22F29CCD00129732 /* UserDefaults+AltServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0241A922F29CCD00129732 /* UserDefaults+AltServer.swift */; };
@@ -852,6 +854,7 @@
 		821769A92FE99E2400980080 /* AnisetteServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnisetteServer.swift; sourceTree = "<group>"; };
 		821769AA2FE99E2400980080 /* AnisetteServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnisetteServerManager.swift; sourceTree = "<group>"; };
 		82AB00032FC0345000567241 /* ChooseAnisetteServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAnisetteServerView.swift; sourceTree = "<group>"; };
+		823E345D305A00E900EBB2DE /* LocalAnisetteDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAnisetteDataManager.swift; sourceTree = "<group>"; };
 		82D6ED892EEA137A009DC668 /* TaskGroup+Collated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskGroup+Collated.swift"; sourceTree = "<group>"; };
 		A136EE677716B80768E9F0A2 /* Pods-AltStore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AltStore.release.xcconfig"; path = "Target Support Files/Pods-AltStore/Pods-AltStore.release.xcconfig"; sourceTree = "<group>"; };
 		BF02419522F2199300129732 /* RefreshAttemptsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAttemptsViewController.swift; sourceTree = "<group>"; };
@@ -1360,6 +1363,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				823E33CB3059B78900EBB2DE /* AnisetteKit in Frameworks */,
 				D58D5F2E26DFE68E00E55E38 /* LaunchAtLogin in Frameworks */,
 				BF088D382501A833008082D9 /* OpenSSL.xcframework in Frameworks */,
 				BF4588882298DD3F00BD7491 /* libxml2.tbd in Frameworks */,
@@ -2494,6 +2498,7 @@
 			children = (
 				D58032ED2AB241D100878F5E /* AnisetteError.swift */,
 				BFE48974238007CE003239E0 /* AnisetteDataManager.swift */,
+				823E345D305A00E900EBB2DE /* LocalAnisetteDataManager.swift */,
 			);
 			path = "Anisette Data";
 			sourceTree = "<group>";
@@ -2733,6 +2738,7 @@
 				BF088D352501A821008082D9 /* AltSign-Dynamic */,
 				D58D5F2D26DFE68E00E55E38 /* LaunchAtLogin */,
 				CA1DE71000000000000005A1 /* IDevice */,
+				823E33CA3059B78900EBB2DE /* AnisetteKit */,
 			);
 			productName = AltServer;
 			productReference = BF45868D229872EA00BD7491 /* AltServer.app */;
@@ -2982,6 +2988,7 @@
 				D56435E42E2AC35C007D1935 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				823661F72FA917BB0063A710 /* XCRemoteSwiftPackageReference "minimuxer" */,
 				CA1DE71000000000000005A0 /* XCLocalSwiftPackageReference "Dependencies/idevice/swift" */,
+				823E33C93059B78900EBB2DE /* XCRemoteSwiftPackageReference "AnisetteKit" */,
 			);
 			productRefGroup = BFD2476B2284B9A500981D42 /* Products */;
 			projectDirPath = "";
@@ -3452,6 +3459,7 @@
 				BF458690229872EA00BD7491 /* AppDelegate.swift in Sources */,
 				BFECAC8424FD950B0077C41F /* ALTConstants.m in Sources */,
 				BF4586C52298CDB800BD7491 /* ALTDeviceManager.mm in Sources */,
+				823E345E305A00E900EBB2DE /* LocalAnisetteDataManager.swift in Sources */,
 				CA1DE71000000000000005B1 /* DevicePairingManager.swift in Sources */,
 				D58032F02AB2429D00878F5E /* ProcessInfo+Device.swift in Sources */,
 				D59A6B842AA932F700F61259 /* Logger+AltServer.swift in Sources */,
@@ -4044,6 +4052,7 @@
 				MARKETING_VERSION = 1.8b1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.AltServer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUNTIME_EXCEPTION_ALLOW_JIT = YES;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "AltServer/AltServer-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4097,6 +4106,7 @@
 				MARKETING_VERSION = 1.8b1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.AltServer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUNTIME_EXCEPTION_ALLOW_JIT = YES;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "AltServer/AltServer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -4857,6 +4867,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		823E33C93059B78900EBB2DE /* XCRemoteSwiftPackageReference "AnisetteKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/altstoreio/AnisetteKit";
+			requirement = {
+				kind = revision;
+				revision = 1f5a7e36553cc865b873f222b87a6486c0bcc7bf;
+			};
+		};
 		823661F72FA917BB0063A710 /* XCRemoteSwiftPackageReference "minimuxer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SideStore/minimuxer";
@@ -4900,6 +4918,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		823E33CA3059B78900EBB2DE /* AnisetteKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 823E33C93059B78900EBB2DE /* XCRemoteSwiftPackageReference "AnisetteKit" */;
+			productName = AnisetteKit;
+		};
 		823661F82FA917BB0063A710 /* Minimuxer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 823661F72FA917BB0063A710 /* XCRemoteSwiftPackageReference "minimuxer" */;
