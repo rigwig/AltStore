@@ -56,10 +56,25 @@ AltStore and AltServer are both fairly straightforward to compile and run if you
 	cd AltStore 
 	git submodule update --init --recursive
 	```
-3. Open `AltStore.xcworkspace` and select the AltStore project in the project navigator. On the `Signing & Capabilities` tab, change the team from `Yvette Testut` to your own account.
-4. **(AltStore only)** Change the value for `ALTDeviceID` in the Info.plist to your device's UDID. Normally, AltServer embeds the device's UDID in AltStore's Info.plist during installation. When running through Xcode you'll need to set the value yourself or else AltStore won't resign (or even install) apps for the proper device.
-5. **(AltStore only)** Change the value for `ALTServerID` in the Info.plist to your AltServer's serverID. This is embedded by AltServer during installation to help AltStore distinguish between multiple AltServers on the same network, and you can find this by using a Bonjour browsing application and noting the serverID advertised by AltServer. This isn't strictly necessary, because if AltStore can't find the AltServer with the embedded serverID it still falls back to trying another AltServer. However, this will help in cases where there are multiple AltServers running (plus the error messages are more helpful).
-6. Build + run app! 🎉
+3. **(AltServer, `rigwig-release-macos27` branch)** Download `idevice-xcframework-v0.1.62.zip` from the [jkcoxson/idevice v0.1.62 release](https://github.com/jkcoxson/idevice/releases/tag/v0.1.62) and extract `IDevice.xcframework` into `Dependencies/idevice/swift/`. The xcframework is a prebuilt binary that isn't committed to git, and the build fails without it (`local binary target 'IDevice' … does not contain a binary artifact`). The release version must match the submodule's pinned tag (`git -C Dependencies/idevice describe --tags`).
+4. Open `AltStore.xcworkspace` and select the AltStore project in the project navigator. On the `Signing & Capabilities` tab, change the team from `Yvette Testut` to your own account.
+5. **(AltStore only)** Change the value for `ALTDeviceID` in the Info.plist to your device's UDID. Normally, AltServer embeds the device's UDID in AltStore's Info.plist during installation. When running through Xcode you'll need to set the value yourself or else AltStore won't resign (or even install) apps for the proper device.
+6. **(AltStore only)** Change the value for `ALTServerID` in the Info.plist to your AltServer's serverID. This is embedded by AltServer during installation to help AltStore distinguish between multiple AltServers on the same network, and you can find this by using a Bonjour browsing application and noting the serverID advertised by AltServer. This isn't strictly necessary, because if AltStore can't find the AltServer with the embedded serverID it still falls back to trying another AltServer. However, this will help in cases where there are multiple AltServers running (plus the error messages are more helpful).
+7. Build + run app! 🎉
+
+### AltServer anisette data on macOS 26+ (`rigwig-release-macos27` branch)
+
+macOS 26 and later no longer provide anisette data to unentitled apps, and since October 2026 Apple has been rejecting the usual third-party workarounds in quick succession (Android-emulated anisette with `-80045`/HTTP 503 since October 12–14, then widely-shared Windows identities with `-45061` since ~October 17). On macOS 27, AltServer therefore fetches anisette data from a remote anisette v3 server and signs in to Apple with that server's client identity.
+
+- The server must report Windows or Mac `client_info` on `/v3/client_info`; Android identities are rejected by Apple.
+- The default server is `https://ani.jkcoxson.com` (Windows identity). As of October 19 2026 that identity also draws `-45061`, and the working choice is the Mac-identity server:
+  ```
+  defaults write com.rileytestut.AltServer AnisetteServerURL https://mac-ani.jkcoxson.com
+  ```
+- The provisioned identity is cached in `~/Library/Application Support/com.rileytestut.AltServer/RemoteAnisetteWindows/identity.json`. Changing the server re-provisions automatically; to force a fresh identity, quit AltServer and delete that directory.
+- Your Apple ID password and 2FA code are only ever sent to Apple — the anisette server only sees the throwaway anisette identity it provisions.
+
+This is an ongoing cat-and-mouse situation; if sign-in breaks again, check [altstoreio/AltStore#1828](https://github.com/altstoreio/AltStore/issues/1828) and related PRs for the current state.
 
 ## Licensing
 
