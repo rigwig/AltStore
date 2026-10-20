@@ -255,10 +255,12 @@ private extension RemoteAnisetteDataFetcher
         let clientInfoURL = serverURL.appending(components: "v3", "client_info")
         let response: Response = try await self.send(URLRequest(url: clientInfoURL), decoder: decoder, anisetteServerURL: serverURL)
 
-        guard response.clientInfo.contains("<Windows;"),
+        // Apple rejects Android identities outright, and since ~October 17 widely-shared Windows
+        // identities draw -45061 too, so Mac (iTunes-era) client_info servers are also allowed.
+        guard response.clientInfo.contains("<Windows;") || response.clientInfo.contains("<Mac OS X;") || response.clientInfo.contains("<macOS;"),
               !response.clientInfo.contains("\r"), !response.clientInfo.contains("\n"),
               !response.userAgent.isEmpty, !response.userAgent.contains("\r"), !response.userAgent.contains("\n")
-        else { throw AnisetteError.remoteServerInvalidResponse(serverURL: serverURL, debugDescription: "The server must supply Windows client_info and a user_agent.") }
+        else { throw AnisetteError.remoteServerInvalidResponse(serverURL: serverURL, debugDescription: "The server must supply Windows or Mac client_info and a user_agent.") }
         return (response.clientInfo, response.userAgent)
     }
 
